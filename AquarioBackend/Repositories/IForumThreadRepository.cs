@@ -13,5 +13,7 @@ namespace AquarioBackend.Repositories
 
         Task<ForumThread?> UpdateAsync(int id, ForumThread thread);
 
+        Task<ForumThread?> DeleteAsync(int id);
+
     }
 }

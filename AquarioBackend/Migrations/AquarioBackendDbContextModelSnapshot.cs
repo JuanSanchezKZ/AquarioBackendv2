@@ -34,6 +34,13 @@ namespace AquarioBackend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Tag")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ThreadLikes")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("TimeCreated")
                         .HasColumnType("datetime2");
 
@@ -41,12 +48,15 @@ namespace AquarioBackend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ThreadId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Threads");
                 });
@@ -66,32 +76,13 @@ namespace AquarioBackend.Migrations
                     b.Property<int>("ForumThreadId")
                         .HasColumnType("int");
 
+                    b.Property<int>("RepliesLikes")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("TimeCreated")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ForumThreadId");
-
-                    b.ToTable("Replies");
-                });
-
-            modelBuilder.Entity("AquarioBackend.Models.User", b =>
-                {
-                    b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
+                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -99,20 +90,11 @@ namespace AquarioBackend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
 
-                    b.ToTable("Users");
-                });
+                    b.HasIndex("ForumThreadId");
 
-            modelBuilder.Entity("AquarioBackend.Models.ForumThread", b =>
-                {
-                    b.HasOne("AquarioBackend.Models.User", "User")
-                        .WithMany("ForumThread")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
+                    b.ToTable("Replies");
                 });
 
             modelBuilder.Entity("AquarioBackend.Models.Reply", b =>
@@ -129,11 +111,6 @@ namespace AquarioBackend.Migrations
             modelBuilder.Entity("AquarioBackend.Models.ForumThread", b =>
                 {
                     b.Navigation("Reply");
-                });
-
-            modelBuilder.Entity("AquarioBackend.Models.User", b =>
-                {
-                    b.Navigation("ForumThread");
                 });
 #pragma warning restore 612, 618
         }

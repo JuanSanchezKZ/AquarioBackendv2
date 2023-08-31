@@ -1,8 +1,10 @@
 ﻿using AquarioBackend.Models;
 using AquarioBackend.Models.Domain.DTO;
 using AquarioBackend.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace AquarioBackend.Controllers
 {
@@ -20,6 +22,7 @@ namespace AquarioBackend.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Reader, Writer")]
 
         public async Task<IActionResult> GetAll()
         {
@@ -30,6 +33,7 @@ namespace AquarioBackend.Controllers
 
         [HttpGet]
         [Route("{id}")]
+        [Authorize(Roles = "Reader, Writer")]
 
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
@@ -44,13 +48,19 @@ namespace AquarioBackend.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Reader, Writer")]
         public async Task<IActionResult> Create([FromBody] AddReplyRequestDTO addReplyRequestDTO)
         {
+
+            var userId = User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+            var userName = User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
+
             var replyDomainModel = new Reply
             {
                 Content = addReplyRequestDTO.Content,
                 ForumThreadId = addReplyRequestDTO.ForumThreadId,
-                UserId = addReplyRequestDTO.UserId,
+                UserId = userId,
+                UserName = userName,
             };
 
             replyDomainModel = await replyRepository.CreateAsync(replyDomainModel);
@@ -60,12 +70,31 @@ namespace AquarioBackend.Controllers
                 Id = replyDomainModel.Id,
                 Content = addReplyRequestDTO.Content,
                 ForumThreadId = replyDomainModel.ForumThreadId,
-                UserId = replyDomainModel.UserId,
+                UserId = userId,
+                UserName = userName,
 
             };
 
 
             return CreatedAtAction("GetById", new { id = replyDomainModel.Id }, replyDto);
         }
+
+        [HttpDelete]
+        [Route("{id}")]
+        [Authorize(Roles = "Reader, Writer")]
+
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            var reply = await replyRepository.DeleteAsync(id);
+
+            if (reply == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(reply);
+        }
+
+
     }
 }

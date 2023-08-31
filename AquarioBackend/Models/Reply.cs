@@ -10,8 +10,12 @@ namespace AquarioBackend.Models
         public int Id { get; set; }
         public string Content { get; set; }
         public DateTime TimeCreated { get; set; }
+
+        public int RepliesLikes { get; set; }
         public int ForumThreadId { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
+
+        public string UserName { get; set; }
         public virtual ForumThread ForumThread { get; set; }
 
 

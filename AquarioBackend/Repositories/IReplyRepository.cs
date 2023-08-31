@@ -1,4 +1,5 @@
 ﻿using AquarioBackend.Models;
+using AquarioBackend.Models.Domain.DTO;
 
 namespace AquarioBackend.Repositories
 {
@@ -6,8 +7,10 @@ namespace AquarioBackend.Repositories
     {
         Task<List<Reply>> GetAllAsync();
 
-        Task<Reply> GetByIdAsync(int id);
+        Task<ReplyDTO> GetByIdAsync(int id);
 
         Task<Reply> CreateAsync(Reply reply);
+
+        Task<Reply?> DeleteAsync(int id);
     }
 }

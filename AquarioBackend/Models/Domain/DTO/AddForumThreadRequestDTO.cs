@@ -7,7 +7,6 @@
 
         public required string Content { get; set; }
 
-
-        public int UserId { get; set; }
+        public required string Tag { get; set; }  
     }
 }
